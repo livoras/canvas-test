@@ -15,6 +15,8 @@ WIDTH = document.documentElement.clientWidth
 eCanvas.height = HEIGHT
 eCanvas.width = WIDTH
 
+dt = 1000 / 60
+
 loadImageAndDraw = ->
     bird = new Image
     bird.addEventListener "load", ->
@@ -22,11 +24,27 @@ loadImageAndDraw = ->
     bird.src = "assets/bird.png"
 
 man = 
-    x: 0# Math.random() * WIDTH
+    x: 0#Math.random() * WIDTH
     y: 0#Math.random() * HEIGHT
-    vx: 10
-    vy: 10
+    vx: 6
+    vy: 6
+    then: null
+    acc: null
+
     move: ->
+        if not @then 
+            @acc = 0
+            return @then = +new Date
+        now = +new Date
+        passed = now - @then
+        @acc += passed
+        while @acc > dt
+            @update()
+            @acc -= dt
+        @then = now
+        @draw()
+
+    update: ->
         ctx.clearRect @x, @y, bird.width, bird.height
         if (@x > WIDTH - bird.width) or (@x < 0)
             if @x < 0 then @x = 0
@@ -36,10 +54,10 @@ man =
             if @y < 0 then @y = 0
             else @y = HEIGHT - bird.height
             @vy = -@vy
-
         @x += @vx
         @y += @vy
 
+    draw: ->
         ctx.drawImage bird, @x, @y, bird.width, bird.height
 
 world = 

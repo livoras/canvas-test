@@ -47,7 +47,7 @@ module.exports = (grunt)->
         options:
           livereload: true
         files: ["src/**/*.coffee", "src/**/*.less", "src/**/*.html", "index.html", "test/**/*.coffee", "test/**/*.html"]
-        tasks: ["browserify", "less", "mocha"]
+        tasks: ["browserify", "less"]
 
     less:    
       dev:
@@ -93,7 +93,6 @@ module.exports = (grunt)->
       "clean:bin"
       "browserify"
       "less"
-      "mocha"
       "watch"
     ]
 
