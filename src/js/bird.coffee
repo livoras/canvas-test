@@ -15,18 +15,24 @@ class Bird extends EventEmitter
         @acc = null
         @bird = null
 
-    init: (@bird)->
-        @bird.width = 36
-        @bird.height = 36
-        @bird.style.border = "3px solid #ddd"
+    init: (@bird, @bounds)->
+        @bird.width = 50
+        @bird.height = 32
+        @bird.style.border = "1px solid #ddd"
         @reset()
         @draw()
 
     reset: ->
-        @isDie = no
+        @isDie = yes
         @x = (WIDTH - @bird.width) / 2
-        @y = 100
+        @y = HEIGHT / 2 - @bird.height
+        @vx = 0
+        @vy = 0
+
+    revive: ->
+        @isDie = no
         @vx = VX
+        @vy = -VY
 
     move: ->
         if not @then 
@@ -50,15 +56,14 @@ class Bird extends EventEmitter
             if @x < 0 then @x = 0
             else @x = WIDTH - @bird.width
             @vx = -@vx
+            @emit "turn around"
         @x += @vx
 
     updateY: ->
         if @isDie then return
-        if (@y >= HEIGHT - @bird.height)
-            @y = HEIGHT - @bird.height
-            @vy = 0
-            @vx = 0
-            @isDie = yes
+        if (@y <= @bounds.up) or (@y >= @bounds.down - @bird.height)
+            @y = @bounds.down - @bird.height
+            @die()
         else
             @vy += 0.2
         @y += @vy
@@ -69,5 +74,11 @@ class Bird extends EventEmitter
     flip: ->
         @vy = -VY
         if @isDie then @reset()
+
+    die: ->
+        @vy = 0
+        @vx = 0
+        @isDie = yes
+        @emit "die"
 
 module.exports = new Bird

@@ -3,6 +3,7 @@ util = require "../../lib/util"
 
 $ = util.$
 eDebug = $ "#debug"
+agent = AGENT.match(/AppleWebKit\/.+?\s/)[0]
 
 debug = 
     count: 0
@@ -13,7 +14,7 @@ debug =
             eDebug.innerHTML = """
                 <p>width: #{WIDTH}, height: #{HEIGHT}, FPS: #{fps}</p>
                 <hr>
-                <p>#{AGENT}</p>
+                <p>#{agent}</p>
             """
 
 module.exports = debug

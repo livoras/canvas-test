@@ -1,6 +1,30 @@
+body {
+    overflow: hidden;
+    background-color: #000;
+}
+
 * {
     padding: 0;
     margin: 0;
+}
+
+.area {
+    background-color: #3D6280;
+    z-index: 2;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.bird {
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 #canvas {
@@ -10,7 +34,93 @@
 }
 
 #debug {
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
 }
+
+.state {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#over {
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    div.button-group {
+        position: absolute;
+        width: 70%;
+        height: 70%;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: #fff;
+    }
+}
+
+#share {
+    display: none;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
+
+.ground {
+    position: absolute;
+    width: 100%;
+    background-color: #76B1D8;
+    left: 0;
+    &.up-ground {
+        top: 0;
+    }
+    &.down-ground {
+        bottom: 0;
+    }
+}
+
+.angle {
+    position: absolute;
+    left: 0;
+    height: 0;
+    width: 0;
+}
+
+.wall {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    &.left-wall {
+        left: 0;
+    }
+    &.right-wall {
+        right: 0;
+    }
+}
+
+//     &.angle-on-down {
+//         border-bottom: 32px solid red;
+//         border-left: 16px solid transparent;
+//         border-right: 16px solid transparent;
+//     }
+//     &.angle-on-top {
+//         border-top: 32px solid red;
+//         border-left: 16px solid transparent;
+//         border-right: 16px solid transparent;
+//     }
+// .angle-on-left {
+//     border-left: 32px solid #ccc;
+//     border-top: 16px solid transparent;
+//     border-bottom: 16px solid transparent;
+// }
+//     &.angle-on-right {
+//         border-right: 32px solid red;
+//         border-top: 16px solid transparent;
+//         border-bottom: 16px solid transparent;
+//     }
+// }
