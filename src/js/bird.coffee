@@ -14,6 +14,8 @@ class Bird extends EventEmitter
         @then = null
         @acc = null
         @bird = null
+        @leftBricksPos = []
+        @rightBricksPos = []
 
     init: (@bird, @bounds)->
         @bird.width = 50
@@ -28,6 +30,8 @@ class Bird extends EventEmitter
         @y = HEIGHT / 2 - @bird.height
         @vx = 0
         @vy = 0
+        @leftBricksPos = []
+        @rightBricksPos = []
 
     revive: ->
         @isDie = no
@@ -52,12 +56,27 @@ class Bird extends EventEmitter
         @updateY()
 
     updateX: ->
+        @checkTouchSideBricks()
         if (@x > WIDTH - @bird.width) or (@x < 0)
             if @x < 0 then @x = 0
             else @x = WIDTH - @bird.width
             @vx = -@vx
             @emit "turn around"
         @x += @vx
+
+    checkTouchSideBricks: ->
+        if @isDie then return
+        if @x < @bounds.left
+            if @vx < 0 then bricksPos = @leftBricksPos
+            else return
+        else if @x > @bounds.right - @bird.width
+            if @vx > 0 then bricksPos = @rightBricksPos
+            else return
+        else return
+        for pos in bricksPos
+            from = @bounds.up + pos * @bounds.brickWidth
+            to = from + @bounds.brickWidth
+            if from < @y < to then return @die()
 
     updateY: ->
         if @isDie then return

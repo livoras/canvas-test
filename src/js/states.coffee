@@ -1,5 +1,6 @@
 util = require "../../lib/util"
 EventEmitter = require("eventemitter2").EventEmitter2
+common = require "./common.coffee"
 
 states = ["start", "game", "over", "share"]
 $ = util.$
@@ -10,6 +11,7 @@ class State extends EventEmitter
         super @
         @$over = $ "#over"
         @$share = $ "#share"
+        @$score = $ "#over .score"
         @state = "start" # "game", "over", "share"
         @init()
 
@@ -41,6 +43,7 @@ class State extends EventEmitter
 
     toggleOverState: (state)->
         if state in ["over", "share"]
+            @$score.innerHTML = common.score
             @$over.style.display = "block"
         else
             @$over.style.display = "none"

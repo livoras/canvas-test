@@ -5,11 +5,14 @@ states = require "./states.coffee"
 bricks = require "./bricks.coffee"
 r = require "../../lib/r"
 util = require "../../lib/util"
-{HEIGHT, WIDTH} = require "./common.coffee"
+common = require "./common.coffee"
+{HEIGHT, WIDTH} = common
 
 $ = util.$
 game = new Game
 $area = $(".area")
+$score = $ "#score"
+score = 0
 
 game.on "init", ->
     game.add debug
@@ -29,7 +32,25 @@ initBird = ->
     $area.appendChild birdDOM
     bird.init birdDOM, bricks.getBounds()
     flipWhenTouchDown()
+    boundBricks()
     game.add bird 
+
+boundBricks = ->
+    bird.on "turn around", ->
+        score++
+        updateScore()
+        if bird.vx < 0
+            bricks.hideRight()
+            bricks.showLeftWithRandomBricks()
+        else
+            bricks.hideLeft()
+            bricks.showRightWithRandomBricks()
+
+    bricks.on "left bricks change", (pos)->
+        bird.leftBricksPos = pos
+
+    bricks.on "right bricks change", (pos)->
+        bird.rightBricksPos = pos
 
 initBricks = ->
     brickWidth = 35
@@ -41,6 +62,10 @@ initBricks = ->
 
 initStates = ->
     states.on "start", ->
+        score = 0
+        updateScore()
+        bricks.hideLeft()
+        bricks.hideRight()
         bird.reset()
 
     states.on "game", ->
@@ -55,5 +80,15 @@ flipWhenTouchDown = ->
 load = ->
     r.on "all images loaded", -> game.init()
     r.images.set "bird", "assets/bird.png"
+
+updateScore = ->
+    common.score = score
+    updateBricksCount score
+    $score.innerHTML = score 
+
+updateBricksCount = (score)->
+    count = (Math.floor score / 10) + 3
+    if count > 10 then count = 10
+    bricks.bricksCount = count
 
 load()

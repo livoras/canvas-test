@@ -25,6 +25,7 @@ body {
     position: absolute;
     left: 0;
     top: 0;
+    border-radius: 5px;
 }
 
 #canvas {
@@ -92,8 +93,24 @@ body {
 }
 
 .wall {
+    @duration: 0.1s;
+    @type: ease;
+    -webkit-transform: translate3d(0, 0, 0);
+       -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+         -o-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+    -webkit-transition: all @duration @type;
+       -moz-transition: all @duration @type;
+        -ms-transition: all @duration @type;
+         -o-transition: all @duration @type;
+            transition: all @duration @type;
+    width: 20px;
+    // background-color: #ccc;
     position: absolute;
     top: 0;
+    bottom: 0;
+    margin: auto;
     height: 100%;
     &.left-wall {
         left: 0;
@@ -101,6 +118,21 @@ body {
     &.right-wall {
         right: 0;
     }
+}
+
+#score {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 0;
+    height: 100px;
+    width: 100px;
+    font-size: 50px;
+    color: #ccc;
+    text-align: center;
 }
 
 //     &.angle-on-down {
