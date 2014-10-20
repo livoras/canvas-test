@@ -63,12 +63,14 @@ initBricks = ->
 initStates = ->
     states.on "start", ->
         score = 0
+        $score.style.display = "none"
         updateScore()
         bricks.hideLeft()
         bricks.hideRight()
         bird.reset()
 
     states.on "game", ->
+        $score.style.display = "block"
         bird.revive()
 
     bird.on "die", -> states.change "over"
