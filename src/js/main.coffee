@@ -1,5 +1,6 @@
 Game = require "../../lib/game"
 bird = require "./bird.coffee"
+candy = require "./candy.coffee"
 debug = require "./debug.coffee"
 states = require "./states.coffee"
 bricks = require "./bricks.coffee"
@@ -15,11 +16,13 @@ $score = $ "#score"
 score = 0
 
 game.on "init", ->
-    game.add debug
+    # game.add debug
     initArea()
     initBricks()
     initStates()
     initBird()
+    initCandy()
+    collideCandyAndBird()
     states.change "start"
 
 initArea = ->    
@@ -34,6 +37,25 @@ initBird = ->
     flipWhenTouchDown()
     boundBricks()
     game.add bird 
+
+initCandy = ->
+    candy.init bricks.getBounds()
+    bird.on "turn around", -> 
+        if candy.isShow then return
+        candy.show()
+        candy.moveToRandomPos()
+
+collideCandyAndBird = ->
+    game.add 
+        move: ->
+            if not candy.isShow then return
+            vTouched = (candy.x < bird.x + bird.width) && (bird.x < candy.x + candy.width)
+            hTouched = (candy.y < bird.y + bird.height) && (bird.y < candy.y + candy.height)
+            if vTouched and hTouched
+                score += 3
+                updateScore score
+                candy.hide()
+
 
 boundBricks = ->
     bird.on "turn around", ->
@@ -68,6 +90,7 @@ initStates = ->
         bricks.hideLeft()
         bricks.hideRight()
         bird.reset()
+        candy.hide()
 
     states.on "game", ->
         $score.style.display = "block"

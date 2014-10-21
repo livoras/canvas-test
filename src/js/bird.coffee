@@ -16,11 +16,13 @@ class Bird extends EventEmitter
         @bird = null
         @leftBricksPos = []
         @rightBricksPos = []
+        @rotateY = 0
+        @width = 50
+        @height = 32
 
     init: (@bird, @bounds)->
-        @bird.width = 50
-        @bird.height = 32
-        @bird.style.border = "1px solid #ddd"
+        @bird.width = @width
+        @bird.height = @height
         @reset()
         @draw()
 
@@ -32,6 +34,7 @@ class Bird extends EventEmitter
         @vy = 0
         @leftBricksPos = []
         @rightBricksPos = []
+        @turnRight()
 
     revive: ->
         @isDie = no
@@ -61,6 +64,8 @@ class Bird extends EventEmitter
             if @x < 0 then @x = 0
             else @x = WIDTH - @bird.width
             @vx = -@vx
+            if @vx > 0 then @turnRight()
+            else @turnLeft()
             @emit "turn around"
         @x += @vx
 
@@ -87,8 +92,14 @@ class Bird extends EventEmitter
             @vy += 0.2
         @y += @vy
 
+    turnRight: ->
+        @rotateY = 0
+
+    turnLeft: ->
+        @rotateY = 180
+
     draw: ->
-        @bird.style.webkitTransform = "translate3d(#{@x}px, #{@y}px, 0)"
+        @bird.style.webkitTransform = "translate3d(#{@x}px, #{@y}px, 0) rotateY(#{@rotateY}deg)"
 
     flip: ->
         @vy = -VY
