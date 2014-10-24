@@ -13,7 +13,14 @@ $ = util.$
 game = new Game
 $area = $(".area")
 $score = $ "#score"
+$gameName = $ "h1.name"
+$instruction = $ "div.instruction"
+$highestText = $ "h2.highest-score"
+$highestScore = $ "#highest-score"
 score = 0
+highestScore = 0
+
+LS_NAME = "highest-score"
 
 game.on "init", ->
     # game.add debug
@@ -22,6 +29,7 @@ game.on "init", ->
     initStates()
     initBird()
     initCandy()
+    retrieveHighestScore()
     collideCandyAndBird()
     states.change "start"
 
@@ -97,12 +105,24 @@ initStates = ->
         bricks.hideRight()
         bird.reset()
         candy.hide()
+        showAllText()
 
     states.on "game", ->
         $score.style.display = "block"
         bird.revive()
+        hideAllText()
 
     bird.on "die end", -> states.change "over"
+
+hideAllText = ->
+    $gameName.style.display = "none"
+    $highestText.style.display = "none"
+    $instruction.style.display = "none"
+
+showAllText = ->
+    $gameName.style.display = "block"
+    $highestText.style.display = "block"
+    $instruction.style.display = "block"
 
 flipWhenTouchDown = ->
     window.addEventListener "touchstart", ->
@@ -113,10 +133,21 @@ updateScore = ->
     common.score = score
     updateBricksCount score
     $score.innerHTML = score 
+    if score > highestScore then updateHighestScore()
+
+updateHighestScore = ->
+    highestScore = score
+    localStorage.setItem LS_NAME, highestScore
+    $highestScore.innerHTML = highestScore
 
 updateBricksCount = (score)->
     count = (Math.floor score / 10) + 3
     if count > 10 then count = 10
     bricks.bricksCount = count
+
+retrieveHighestScore = ->
+    highestScore = localStorage.getItem LS_NAME
+    highestScore = highestScore or 0
+    $highestScore.innerHTML = "" + highestScore
 
 game.init()

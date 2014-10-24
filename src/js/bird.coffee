@@ -27,6 +27,10 @@ class Bird extends EventEmitter
         @bird.height = @height
         @reset()
         @draw()
+        @show()
+
+    show: ->
+        @bird.style.display = "block"
 
     reset: ->
         @isDie = yes
