@@ -5,10 +5,10 @@ common = require "./common.coffee"
 states = ["start", "game", "over", "share"]
 $ = util.$
 
-window.imgUrl = window.location.href.replace(/\w+\.html$/, '') + "assets/bird.png";
+window.imgUrl = window.location.href.replace(/\w+\.html$/, '') + "assets/dead-bird.png";
 window.lineLink = window.location.href;
-window.descContent = '';
-window.shareTitle = '';
+window.descContent = "千万不要碰到钉子！！";
+window.shareTitle = "别碰钉子！";
 
 class State extends EventEmitter
 
@@ -56,14 +56,14 @@ class State extends EventEmitter
             @$rank.innerHTML = getRankByScore score
             @$bullShit.innerHTML = getBullShitByScore score
             @$over.style.display = "block"
+            window.descContent = "千万别碰钉子！"
+            window.shareTitle = "我成功地避开了#{common.turnCount}次虐心的钉子啊！！你的小鸟准备好了吗？"
         else
             @$over.style.display = "none"
 
     showShare: (count)->
         @$count.innerHTML = common.turnCount
         @$share.style.display = "block"
-        window.descContent = "我成功地避开了#{common.turnCount}次虐心的钉子啊！！你的小鸟准备好了吗？"
-        window.shareTitle = "别碰钉子！"
 
 
 getRankByScore = (score)->
