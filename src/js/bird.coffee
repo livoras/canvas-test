@@ -3,6 +3,7 @@ EventEmitter = require("eventemitter2").EventEmitter2
 
 VX = 3
 VY = 5
+DIE_WAIT = 500
 
 class Bird extends EventEmitter
     constructor: ->
@@ -17,6 +18,7 @@ class Bird extends EventEmitter
         @leftBricksPos = []
         @rightBricksPos = []
         @rotateY = 0
+        @rotateZ = 0
         @width = 50
         @height = 32
 
@@ -32,9 +34,12 @@ class Bird extends EventEmitter
         @y = HEIGHT / 2 - @bird.height
         @vx = 0
         @vy = 0
+        @rotateZ = 0
         @leftBricksPos = []
         @rightBricksPos = []
         @turnRight()
+        @changeBirdStatus isDie = no
+        @bird.className = "bird"
 
     revive: ->
         @isDie = no
@@ -86,7 +91,7 @@ class Bird extends EventEmitter
     updateY: ->
         if @isDie then return
         if (@y <= @bounds.up) or (@y >= @bounds.down - @bird.height)
-            @y = @bounds.down - @bird.height
+            # @y = @bounds.down - @bird.height
             @die()
         else
             @vy += 0.2
@@ -99,7 +104,9 @@ class Bird extends EventEmitter
         @rotateY = 180
 
     draw: ->
-        @bird.style.webkitTransform = "translate3d(#{@x}px, #{@y}px, 0) rotateY(#{@rotateY}deg)"
+        @bird.style.webkitTransform = """
+            translate3d(#{@x}px, #{@y}px, 0) rotateY(#{@rotateY}deg) rotateZ(#{@rotateZ}deg)
+        """
 
     flip: ->
         @vy = -VY
@@ -110,5 +117,31 @@ class Bird extends EventEmitter
         @vx = 0
         @isDie = yes
         @emit "die"
+        @changeBirdStatus isDie = yes
+        if @isOnTheGround()
+            setTimeout =>
+                @emit "die end"
+            , DIE_WAIT
+        else
+            @moveToGround => @emit "die end"
+
+    changeBirdStatus: (isDie)->
+        if isDie then @bird.src = "assets/dead-bird.png"
+        else @bird.src = "assets/bird.png"
+
+    isOnTheGround: ->
+        if @y >= @bounds.down - @bird.height then return yes
+        else return no
+
+    moveToGround: (callback)->
+        @bird.className += " dead-animation"
+        @y = @bounds.down - @bird.height + 10
+        @x = @bounds.left + (@bounds.right - @bounds.left) / 2 - @bird.width / 2 - 20
+        @rotateZ = 1840
+        ANIMATION_TIME = 400 # define in css
+        setTimeout ->
+            callback()
+        , DIE_WAIT + ANIMATION_TIME
+
 
 module.exports = new Bird

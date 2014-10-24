@@ -24,9 +24,13 @@ class Candy extends EventEmitter
         @$candy.style.display = "none"
         @isShow = no
 
-    moveToRandomPos: ->
-        GAP = 40
-        x = @bounds.left + GAP + (@bounds.right - @bounds.left - @width - 2 * GAP) * Math.random() 
+    moveToRandomPos: (isRight)->
+        GAP = 20
+        # x = @bounds.left + GAP + (@bounds.right - @bounds.left - @width - 2 * GAP) * Math.random() 
+        if not isRight
+            x = @bounds.left + GAP
+        else
+            x = @bounds.right - @width - GAP
         y = @bounds.up + GAP + (@bounds.down - @bounds.up - @height - 2 * GAP) * Math.random() 
         @moveTo x, y
 

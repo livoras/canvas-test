@@ -28,6 +28,10 @@ body {
     border-radius: 5px;
 }
 
+.dead-bird {
+    display: none;
+}
+
 #canvas {
     position: fixed;
     left: 0;
@@ -153,4 +157,19 @@ img.candy {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.dead-animation {
+    @duration: 0.4s;
+    @type: ease;
+    -webkit-transform: translate3d(0, 0, 0);
+       -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+         -o-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+    -webkit-transition: all @duration @type;
+       -moz-transition: all @duration @type;
+        -ms-transition: all @duration @type;
+         -o-transition: all @duration @type;
+            transition: all @duration @type;
 }

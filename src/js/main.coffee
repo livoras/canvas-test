@@ -30,7 +30,7 @@ initArea = ->
     $area.style.width = "#{WIDTH}px"
 
 initBird = ->
-    birdDOM = r.images.get "bird"
+    birdDOM = $ ".bird"
     birdDOM.className = "bird"
     $area.appendChild birdDOM
     bird.init birdDOM, bricks.getBounds()
@@ -43,7 +43,10 @@ initCandy = ->
     bird.on "turn around", -> 
         if candy.isShow then return
         candy.show()
-        candy.moveToRandomPos()
+        if isBirdFacingLeft()
+            candy.moveToRandomPos()
+        else
+            candy.moveToRandomPos isRight = yes
 
 collideCandyAndBird = ->
     game.add 
@@ -61,7 +64,7 @@ boundBricks = ->
     bird.on "turn around", ->
         score++
         updateScore()
-        if bird.vx < 0
+        if isBirdFacingLeft()
             bricks.hideRight()
             bricks.showLeftWithRandomBricks()
         else
@@ -73,6 +76,9 @@ boundBricks = ->
 
     bricks.on "right bricks change", (pos)->
         bird.rightBricksPos = pos
+
+isBirdFacingLeft = ->
+    bird.vx < 0
 
 initBricks = ->
     brickWidth = 35
@@ -96,15 +102,12 @@ initStates = ->
         $score.style.display = "block"
         bird.revive()
 
-    bird.on "die", -> states.change "over"
+    bird.on "die end", -> states.change "over"
 
 flipWhenTouchDown = ->
     window.addEventListener "touchstart", ->
-        if states.state is "game" then bird.flip()
-
-load = ->
-    r.on "all images loaded", -> game.init()
-    r.images.set "bird", "assets/bird.png"
+        if states.state is "game" and not bird.isDie
+            bird.flip()
 
 updateScore = ->
     common.score = score
@@ -116,4 +119,4 @@ updateBricksCount = (score)->
     if count > 10 then count = 10
     bricks.bricksCount = count
 
-load()
+game.init()
