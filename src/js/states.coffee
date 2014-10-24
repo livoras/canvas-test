@@ -5,6 +5,11 @@ common = require "./common.coffee"
 states = ["start", "game", "over", "share"]
 $ = util.$
 
+window.imgUrl = window.location.href.replace(/\w+\.html$/, '') + "assets/bird.png";
+window.lineLink = window.location.href;
+window.descContent = '';
+window.shareTitle = '';
+
 class State extends EventEmitter
 
     constructor: ->
@@ -14,6 +19,7 @@ class State extends EventEmitter
         @$score = $ "#over .score"
         @$rank = $ "#over .rank"
         @$bullShit = $ "#over .bull-shit"
+        @$count = $ "#share .count"
         @state = "start" # "game", "over", "share"
         @init()
 
@@ -53,8 +59,12 @@ class State extends EventEmitter
         else
             @$over.style.display = "none"
 
-    showShare: ->
+    showShare: (count)->
+        @$count.innerHTML = common.turnCount
         @$share.style.display = "block"
+        window.descContent = "我成功地避开了#{common.turnCount}次虐心的钉子啊！！你的小鸟准备好了吗？"
+        window.shareTitle = "别碰钉子！"
+
 
 getRankByScore = (score)->
     if 0 <= score <= 3 then return percentBullShit 6

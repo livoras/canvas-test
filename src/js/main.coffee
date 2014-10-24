@@ -18,6 +18,7 @@ $instruction = $ "div.instruction"
 $highestText = $ "h2.highest-score"
 $highestScore = $ "#highest-score"
 score = 0
+common.turnCount = 0
 highestScore = 0
 
 LS_NAME = "highest-score"
@@ -71,6 +72,7 @@ collideCandyAndBird = ->
 boundBricks = ->
     bird.on "turn around", ->
         score++
+        common.turnCount++
         updateScore()
         if isBirdFacingLeft()
             bricks.hideRight()
@@ -99,6 +101,7 @@ initBricks = ->
 initStates = ->
     states.on "start", ->
         score = 0
+        common.turnCount = 0
         $score.style.display = "none"
         updateScore()
         bricks.hideLeft()
