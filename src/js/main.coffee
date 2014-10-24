@@ -112,7 +112,8 @@ initStates = ->
         bird.revive()
         hideAllText()
 
-    bird.on "die end", -> states.change "over"
+    bird.on "die end", -> 
+        states.change "over", score
 
 hideAllText = ->
     $gameName.style.display = "none"
