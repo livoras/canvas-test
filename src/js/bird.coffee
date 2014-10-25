@@ -1,9 +1,12 @@
 EventEmitter = require("eventemitter2").EventEmitter2
 {HEIGHT, WIDTH, RATE} = require "./common.coffee"
 
-VX = 3
-VY = 5
-DIE_WAIT = 500
+VX = 4
+VY = 5.5
+ACC_Y = 0.2
+DIE_WAIT = 2000
+LOSS = 0.6
+F_LOSS = 0.9
 
 class Bird extends EventEmitter
     constructor: ->
@@ -21,6 +24,8 @@ class Bird extends EventEmitter
         @rotateZ = 0
         @width = 50
         @height = 32
+        @isRunning = no
+        @FLIPP_DIRCT = -1
 
     init: (@bird, @bounds)->
         @bird.width = @width
@@ -34,11 +39,13 @@ class Bird extends EventEmitter
 
     reset: ->
         @isDie = yes
-        @x = (WIDTH - @bird.width) / 2
-        @y = HEIGHT / 2 - @bird.height
+        @isRunning = no
+        @x = @CENTER_X = (WIDTH - @bird.width) / 2
+        @y = @CENTER_Y = HEIGHT / 2 - @bird.height + 10
         @vx = 0
         @vy = 0
         @rotateZ = 0
+        @FLIPP_DIRCT = -1
         @leftBricksPos = []
         @rightBricksPos = []
         @turnRight()
@@ -47,6 +54,7 @@ class Bird extends EventEmitter
 
     revive: ->
         @isDie = no
+        @isRunning = yes
         @vx = VX
         @vy = -VY
 
@@ -64,6 +72,8 @@ class Bird extends EventEmitter
         @draw()
 
     update: ->
+        if not @isRunning then return @flipping()
+        if @isDie then return @bounce()
         @updateX()
         @updateY()
 
@@ -79,7 +89,6 @@ class Bird extends EventEmitter
         @x += @vx
 
     checkTouchSideBricks: ->
-        if @isDie then return
         if @x < @bounds.left
             if @vx < 0 then bricksPos = @leftBricksPos
             else return
@@ -92,13 +101,36 @@ class Bird extends EventEmitter
             to = from + @bounds.brickWidth
             if from < @y < to then return @die()
 
+    bounce: ->
+        @vy += 0.5
+        @y += @vy
+        @x += @vx
+        @rotateZ += @vRotateZ
+        if (@x < 0) or (@x > WIDTH - @bird.width)
+            @vx = -@vx * LOSS
+            if @x < 0 then @x = 0
+            else @x = WIDTH - @bird.width
+        if (@y <= @bounds.up) or (@y >= @bounds.down - @bird.height)
+            @vy = -@vy * LOSS
+            @vx = @vx * F_LOSS
+            if @y <= @bounds.up then @y = @bounds.up
+            else @y = @bounds.down - @bird.height
+        @vRotateZ = 15 * (@vx / VX)
+
+    flipping: ->
+        GAP = 10
+        if @y >= @CENTER_Y + GAP then @FLIPP_DIRCT = -1
+        else if @y <= @CENTER_Y - GAP then @FLIPP_DIRCT = 1
+        @y += @FLIPP_DIRCT * 0.6
+
+
     updateY: ->
         if @isDie then return
         if (@y <= @bounds.up) or (@y >= @bounds.down - @bird.height)
             # @y = @bounds.down - @bird.height
             @die()
         else
-            @vy += 0.2
+            @vy += ACC_Y
         @y += @vy
 
     turnRight: ->
@@ -114,20 +146,23 @@ class Bird extends EventEmitter
 
     flip: ->
         @vy = -VY
-        if @isDie then @reset()
 
     die: ->
-        @vy = 0
-        @vx = 0
+        # @vy = 0
+        # @vx = 0
+        @vx = -@vx / @vx * 5
+        @vy = -VY
+        @vRotateZ = 15
         @isDie = yes
         @emit "die"
         @changeBirdStatus isDie = yes
-        if @isOnTheGround()
-            setTimeout =>
-                @emit "die end"
-            , DIE_WAIT
-        else
-            @moveToGround => @emit "die end"
+        @bounce()
+        # if @isOnTheGround()
+        setTimeout =>
+            @emit "die end"
+        , DIE_WAIT
+        # else
+        #     @moveToGround => @emit "die end"
 
     changeBirdStatus: (isDie)->
         if isDie then @bird.src = "assets/dead-bird.png"

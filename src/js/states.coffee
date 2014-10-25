@@ -57,7 +57,7 @@ class State extends EventEmitter
             @$bullShit.innerHTML = getBullShitByScore score
             @$over.style.display = "block"
             window.descContent = "千万别碰钉子！"
-            window.shareTitle = "我的虐心小鸟得了#{score}分！果断来挑战我的鸟啊！！"
+            window.shareTitle = "我的虐心小鸟得了#{score}分！！果断来挑战我的鸟啊！"
         else
             @$over.style.display = "none"
 

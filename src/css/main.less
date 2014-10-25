@@ -12,6 +12,7 @@ body {
 @AREA-COLOR: #3D6280;
 
 .area {
+    overflow: hidden;
     background-color: @AREA-COLOR;
     z-index: 2;
     position: fixed;
@@ -92,6 +93,7 @@ body {
             margin: 0 auto;
         }
         div.again, div.show-off {
+            background-color: #fff;
             width: @width;
             font-size: 14px;
             padding: 5px;
@@ -243,11 +245,13 @@ img.candy {
         top: 0;
         bottom: 0;
         margin: auto;
-        font-size: 50px;
-        height: @size / 2;
+        font-size: 80px;
+        height: 80px;
         color: @AREA-COLOR;
-        font-weight: bold;
+        font-weight: bolder;
         text-align: center;
+        line-height: 80px;
+        font-family: Helvetica, sans-serif;
     }
     h1.name {
         position: absolute;
