@@ -30,9 +30,11 @@ body {
     left: 0;
     top: 0;
     border-radius: 5px;
+    -webkit-transform: translate3d(0,0,0);
+    z-index: 4;
 }
 
-.dead-bird {
+.hide {
     display: none;
 }
 
@@ -57,9 +59,10 @@ body {
 }
 
 #over {
-    z-index: 2;
+    z-index: 5;
     background-color: rgba(0, 0, 0, 0.7);
     display: none;
+    -webkit-transform: translate3d(0,0,0);
     div.over-ground {
         text-align: center;
         position: absolute;
@@ -108,9 +111,10 @@ body {
 
 #share {
     display: none;
-    z-index: 3;
+    z-index: 6;
     background-color: rgba(0, 0, 0, 0.9);
     color: #666;
+    -webkit-transform: translate3d(0,0,0);
     div.back {
         border: 2px solid #666;
         border-radius: 5px;
@@ -207,6 +211,8 @@ img.candy {
 }
 
 .circle {
+    z-index: 0;
+    -webkit-transform: translate3d(0,0,0);
     text-align: center;
     position: absolute;
     margin: auto;

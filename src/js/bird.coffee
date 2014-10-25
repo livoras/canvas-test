@@ -102,10 +102,10 @@ class Bird extends EventEmitter
         @y += @vy
 
     turnRight: ->
-        @rotateY = 0
+        @bird.src = "assets/bird.png"
 
     turnLeft: ->
-        @rotateY = 180
+        @bird.src = "assets/bird-left.png"
 
     draw: ->
         @bird.style.webkitTransform = """

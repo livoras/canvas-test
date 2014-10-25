@@ -154,4 +154,8 @@ retrieveHighestScore = ->
     highestScore = highestScore or 0
     $highestScore.innerHTML = "" + highestScore
 
+# Prevent Gray Area in iPhone.
+document.ontouchstart = (e)->
+    e.preventDefault()
+
 game.init()
