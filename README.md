@@ -5,7 +5,7 @@ WHERE AMAZING HAPPENS!
 
 ### 1. 安装Nodejs
 
-### 2. 进入工程目录按照依赖
+### 2. 进入工程目录安装依赖
 
 ```
 npm install -g grunt-cli browserify && npm install
